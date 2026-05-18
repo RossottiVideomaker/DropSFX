@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>DropSFX — Email Confirmado</title>
+  <style>
+    @font-face{font-family:'Degular';font-weight:400;src:local('Degular'),local('Degular-Regular');}
+    @font-face{font-family:'Degular';font-weight:600;src:local('Degular Semibold'),local('Degular-Semibold');}
+    @font-face{font-family:'Degular';font-weight:700;src:local('Degular Bold'),local('Degular-Bold');}
+
+    *{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --purple:#7c3aed;--purple-hi:#a855f7;
+      --purple-glow:rgba(124,58,237,0.4);
+    }
+    body {
+      min-height:100vh;
+      background:linear-gradient(160deg,#0a0812 0%,#050508 100%);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Degular','Inter',-apple-system,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      padding:24px;
+    }
+
+    .card {
+      background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:24px;
+      padding:48px 40px;
+      max-width:400px;width:100%;
+      text-align:center;
+      box-shadow:0 32px 80px rgba(0,0,0,0.6);
+      animation:fadeUp 0.5s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(20px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    .icon-wrap {
+      width:72px;height:72px;border-radius:50%;
+      background:rgba(124,58,237,0.15);
+      border:2px solid rgba(124,58,237,0.3);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 24px;
+      box-shadow:0 0 32px var(--purple-glow);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%,100%{box-shadow:0 0 32px var(--purple-glow);}
+      50%{box-shadow:0 0 48px rgba(124,58,237,0.6);}
+    }
+    .icon-wrap svg { animation: checkIn 0.6s 0.3s cubic-bezier(0.4,0,0.2,1) both; }
+    @keyframes checkIn{from{opacity:0;transform:scale(0.5);}to{opacity:1;transform:scale(1);}}
+
+    h1 {
+      font-size:22px;font-weight:700;
+      color:#ffffff;margin-bottom:10px;letter-spacing:-0.3px;
+    }
+    p {
+      font-size:13px;color:rgba(255,255,255,0.5);
+      line-height:1.6;margin-bottom:28px;
+    }
+    p strong { color:rgba(255,255,255,0.8); }
+
+    .steps {
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px;padding:16px;
+      margin-bottom:28px;text-align:left;
+    }
+    .step {
+      display:flex;align-items:flex-start;gap:10px;
+      padding:6px 0;font-size:12px;color:rgba(255,255,255,0.5);
+    }
+    .step:not(:last-child){border-bottom:1px solid rgba(255,255,255,0.05);}
+    .step-num {
+      width:20px;height:20px;border-radius:50%;
+      background:var(--purple);color:white;
+      font-size:10px;font-weight:700;
+      display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;margin-top:1px;
+    }
+    .step span { color:rgba(255,255,255,0.7); line-height:1.5; }
+
+    .btn {
+      display:inline-block;
+      background:var(--purple);color:white;
+      border:none;border-radius:10px;
+      padding:12px 28px;
+      font-family:'Degular','Inter',sans-serif;
+      font-size:13px;font-weight:600;
+      cursor:pointer;text-decoration:none;
+      box-shadow:0 4px 20px var(--purple-glow);
+      transition:all 0.16s ease;
+    }
+    .btn:hover{background:var(--purple-hi);transform:translateY(-1px);}
+
+    .footer {
+      margin-top:20px;font-size:10.5px;
+      color:rgba(255,255,255,0.25);
+    }
+
+    /* Error state */
+    .card.error .icon-wrap {
+      background:rgba(239,68,68,0.15);
+      border-color:rgba(239,68,68,0.3);
+      box-shadow:0 0 32px rgba(239,68,68,0.3);
+      animation:none;
+    }
+    .card.error h1 { color:#f87171; }
+  </style>
+</head>
+<body>
+<div class="card" id="card">
+
+  <div class="icon-wrap" id="icon-wrap">
+    <svg id="icon-svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+  </div>
+
+  <h1 id="title">Email confirmado! ✓</h1>
+  <p id="desc">
+    Sua conta <strong id="user-email"></strong> foi verificada com sucesso.<br/>
+    Você já pode usar o DropSFX no Premiere Pro.
+  </p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <span>Abra o <strong style="color:rgba(255,255,255,0.8)">Adobe Premiere Pro</strong></span>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <span>Vá em <strong style="color:rgba(255,255,255,0.8)">Window → Extensions → DropSFX</strong></span>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <span>Faça login com seu email e senha</span>
+    </div>
+  </div>
+
+  <a class="btn" href="https://www.adobe.com/products/premiere.html" id="cta-btn">
+    Abrir Premiere Pro
+  </a>
+
+  <p class="footer">DropSFX · Plugin para Adobe Premiere Pro</p>
+</div>
+
+<script>
+  // Parse hash/query params from Supabase redirect
+  // Supabase sends: #access_token=...&type=signup or ?error=...
+  (function() {
+    const hash   = window.location.hash.slice(1);
+    const query  = window.location.search.slice(1);
+    const params = new URLSearchParams(hash || query);
+
+    const type        = params.get('type');
+    const accessToken = params.get('access_token');
+    const error       = params.get('error_description') || params.get('error');
+    const email       = params.get('email') || '';
+
+    if (error) {
+      // Show error state
+      document.getElementById('card').classList.add('error');
+      document.getElementById('icon-svg').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+      document.getElementById('icon-svg').setAttribute('stroke','#f87171');
+      document.getElementById('title').textContent = 'Link inválido';
+      document.getElementById('desc').innerHTML = `O link de confirmação expirou ou já foi usado.<br/>
+        <strong>Crie sua conta novamente</strong> no plugin DropSFX.`;
+      document.getElementById('cta-btn').style.display = 'none';
+      return;
+    }
+
+    if (email) {
+      document.getElementById('user-email').textContent = email;
+    } else {
+      document.getElementById('user-email').parentNode.innerHTML =
+        'Sua conta foi verificada com sucesso.<br/>Você já pode usar o DropSFX no Premiere Pro.';
+    }
+
+    // If we got an access token, store it so next plugin open skips login
+    if (accessToken) {
+      try {
+        const expiresIn = parseInt(params.get('expires_in') || '3600', 10);
+        const exp = Date.now() + expiresIn * 1000;
+        localStorage.setItem('dropsfx_auth_token', accessToken);
+        localStorage.setItem('dropsfx_auth_exp', String(exp));
+      } catch(e) {}
+    }
+  })();
+</script>
+</body>
+</html>
